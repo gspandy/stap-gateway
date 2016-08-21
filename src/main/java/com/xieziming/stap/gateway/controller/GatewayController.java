@@ -32,7 +32,7 @@ import java.util.Enumeration;
         }
 )
 public class GatewayController {
-    private static final Logger log = LoggerFactory.getLogger(GatewayController.class);
+    private static final Logger logger = LoggerFactory.getLogger(GatewayController.class);
     @Autowired
     private GatewayService gatewayService;
     @Autowired
@@ -43,7 +43,7 @@ public class GatewayController {
 
     @RequestMapping("/**")
     public ResponseEntity<?> getResponse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        log.info("got distribute for " + req.getRequestURI());
+        logger.info("got request for " + req.getRequestURI());
         if(!isAuthorized(req)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
         CloseableHttpResponse httpResponse = (CloseableHttpResponse) gatewayService.getResponse(req, resp);
@@ -78,7 +78,13 @@ public class GatewayController {
             }
         }
 
-        if(name != null && token != null && authService.hasAuth(new CredentialCache(name, token)).isAuthSuccess()) return true;
+        if(name != null && token != null){
+            if(authService.hasAuth(new CredentialCache(name, token)).isAuthSuccess()){
+                return true;
+            }else{
+                logger.info("User "+name+" with incorrect token "+token);
+            }
+        }
         return false;
     }
 }

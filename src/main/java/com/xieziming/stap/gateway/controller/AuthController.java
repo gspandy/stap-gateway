@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 public class AuthController {
-    private static Logger log = LoggerFactory.getLogger(AuthController.class);
+    private static Logger logger = LoggerFactory.getLogger(AuthController.class);
     private final String UTF8 = ";charset=UTF-8";
     @Autowired
     private AuthService authService;
