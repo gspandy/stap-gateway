@@ -67,7 +67,7 @@
             <version>3.1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.xieziming</groupId>
+            <groupId>com.xieziming.stap</groupId>
             <artifactId>stap-core</artifactId>
             <version>${stap-base.version}</version>
         </dependency>
