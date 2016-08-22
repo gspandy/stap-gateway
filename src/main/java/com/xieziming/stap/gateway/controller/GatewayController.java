@@ -38,9 +38,6 @@ public class GatewayController {
     @Autowired
     private AuthService authService;
 
-    private final String UTF8 = ";charset=UTF-8";
-
-
     @RequestMapping("/**")
     public ResponseEntity<?> getResponse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if(!isAuthorized(req)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -68,6 +65,7 @@ public class GatewayController {
         String name = null, token = null;
         while(headerNameEnum.hasMoreElements()){
             String headerName = headerNameEnum.nextElement();
+            logger.info("Header "+headerName+", value:  "+req.getHeader(headerName));
             if(headerName.matches("Stap-User")){
                 name = req.getHeader(headerName);
             }
