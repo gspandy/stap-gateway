@@ -23,7 +23,7 @@ import java.util.Enumeration;
  */
 @Component
 public class GatewayServiceImpl implements GatewayService{
-    private static final Logger log = LoggerFactory.getLogger(GatewayServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(GatewayServiceImpl.class);
     private PoolingHttpClientConnectionManager pcm;
 
     @Value("${channelUrl}")
@@ -41,13 +41,11 @@ public class GatewayServiceImpl implements GatewayService{
     public HttpResponse getResponse(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String queryString = req.getQueryString() == null ? "" : "?"+req.getQueryString();
 
-        String url;
-        if(req.getRequestURI().startsWith("/authorize")){
-            url = req.getRequestURL().toString();
-        }else{
-            String cleanChannelUrl = channelUrl.endsWith("/") ? StringUtils.chop(channelUrl) : channelUrl;
-            url = cleanChannelUrl + req.getRequestURI().replaceAll(gatewayPrefix,"")+queryString;
-        }
+        String cleanChannelUrl = channelUrl.endsWith("/") ? StringUtils.chop(channelUrl) : channelUrl;
+        String contentUrl = req.getRequestURI().replaceAll(gatewayPrefix,"")+queryString;
+        String url = cleanChannelUrl + contentUrl;
+
+        logger.info("got request for " + contentUrl);
 
         HttpRequestBase httpRequest = getImplBaseMethod(req.getMethod(), url);
 
@@ -56,18 +54,18 @@ public class GatewayServiceImpl implements GatewayService{
         }
 
         addHeaders(httpRequest, req);
-        log.info("sending request "+ httpRequest);
+        logger.info("sending request to "+ url);
 
         try(CloseableHttpClient httpClient = buildClient()){
             CloseableHttpResponse httpResponse = httpClient.execute(httpRequest);
             if(httpResponse.getEntity().getContentType() != null){
                 resp.setContentType(httpResponse.getEntity().getContentType().getValue());
             }
-            log.info("response from "+httpResponse);
+            logger.info("response from "+httpResponse);
             resp.setStatus(httpResponse.getStatusLine().getStatusCode());
             return httpResponse;
         }catch (Exception e) {
-            log.error("Failed to build http client", e);
+            logger.error("Failed to build http client", e);
             return null;
         }
     }
