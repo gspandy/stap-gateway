@@ -74,7 +74,7 @@ public class GatewayServiceImpl implements GatewayService{
         Enumeration<String> headerNameEnum = httpServletRequest.getHeaderNames();
         while(headerNameEnum.hasMoreElements()){
             String headerName = headerNameEnum.nextElement();
-            if(!headerName.matches("Content-Length")){
+            if(!"Content-Length".equalsIgnoreCase(headerName)){
                 httpRequestBase.setHeader(headerName, httpServletRequest.getHeader(headerName));
             }
         }
