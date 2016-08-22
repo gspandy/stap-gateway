@@ -65,25 +65,18 @@ public class GatewayController {
         String name = null, token = null;
         while(headerNameEnum.hasMoreElements()){
             String headerName = headerNameEnum.nextElement();
-            logger.info("Header "+headerName+", value:  "+req.getHeader(headerName));
-            if(headerName.matches("Stap-User")){
+            //logger.info("Header "+headerName+", value:  "+req.getHeader(headerName));
+            if(headerName.matches("stap-user")){
                 name = req.getHeader(headerName);
             }
 
-            if(headerName.matches("Stap-Token")){
+            if(headerName.matches("stap-token")){
                 token = req.getHeader(headerName);
             }
         }
 
-        if(name != null && token != null){
-            if(authService.hasAuth(new CredentialCache(name, token)).isAuthSuccess()){
-                return true;
-            }else{
-                logger.info("User "+name+" with incorrect token "+token);
-            }
-        }else{
-            logger.info("Unexpected header! { User: "+name+", token: "+token+" }");
-        }
+        if(name != null && token != null && authService.hasAuth(new CredentialCache(name, token)).isAuthSuccess())  return true;
+
         return false;
     }
 }
