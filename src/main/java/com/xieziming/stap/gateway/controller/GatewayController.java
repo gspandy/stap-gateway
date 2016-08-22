@@ -87,6 +87,6 @@ public class GatewayController {
         }else{
             logger.info("Unexpected header! { User: "+name+", token: "+token+" }");
         }
-        return true;
+        return false;
     }
 }
